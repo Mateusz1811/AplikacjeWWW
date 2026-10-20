@@ -1,0 +1,41 @@
+{% extends 'events/base.html' %}
+
+{% block title %}Aktualne Wydarzenia – EventHub{% endblock %}
+
+{% block content %}
+    <h2>Nadchodzące wydarzenia</h2>
+    
+
+    <form method="get" action="{% url 'events:event-list' %}" style="margin-bottom: 20px;">
+        <input type="text" name="q" value="{{ q }}" placeholder="Szukaj po tytule..." style="padding: 8px; width: 300px; border-radius: 4px; border: 1px solid #ccc;">
+        <button type="submit" class="btn">Szukaj</button>
+    </form>
+
+
+    <div style="margin-bottom: 20px;">
+        <strong>Kategorie:</strong>
+        <a href="{% url 'events:event-list' %}" 
+           class="{% if not current_category %}badge{% endif %}" 
+           style="margin-right: 10px; text-decoration: none; color: #0284c7;">
+           Wszystkie
+        </a>
+        {% for category in categories %}
+            <a href="{% url 'events:events-by-category' category.slug %}" 
+               class="{% if current_category == category %}badge{% endif %}" 
+               style="margin-right: 10px; text-decoration: none; color: #0284c7;">
+                {{ category.name }}
+            </a>
+        {% endfor %}
+    </div>
+
+    {% if events %}
+        <div class="event-grid">
+            {% for event in events %}
+                <!-- Z5: Dołączenie komponentu -->
+                {% include 'events/includes/event_card.html' %}
+            {% endfor %}
+        </div>
+    {% else %}
+        <p style="margin-top: 20px;">Brak opublikowanych wydarzeń pasujących do kryteriów.</p>
+    {% endif %}
+{% endblock %}
